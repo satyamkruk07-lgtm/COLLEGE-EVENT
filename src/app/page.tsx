@@ -127,8 +127,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={springTransition}
-            className="flex items-center gap-3 font-medium uppercase tracking-[0.2em] text-2xl"
+            transition={{ type: "spring", stiffness: 100, damping: 10 }}
+            className="flex items-center gap-3 font-medium uppercase tracking-[0.2em] text-cyan-400"
           >
             <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
               <circle cx="12" cy="12" r="9"/><path d="M4.8 5.6A9 9 0 0 0 4.8 18.4"/><path d="M19.2 5.6a9 9 0 0 1 0 12.8"/>

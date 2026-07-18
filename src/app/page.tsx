@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
 // Spring Configs
-const springTransition = { type: "spring", stiffness: 200, damping: 26 };
+const springTransition = { type: "spring" as const, stiffness: 200, damping: 26 };
 
 export default function Home() {
   const [loaderReady, setLoaderReady] = useState(false);

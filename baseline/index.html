@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Baseline — Tennis Club & Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --background: #ffffff;
+      --foreground: #0a0a0a;
+      --brand: #2563c9;
+      --brand-deep: #0f2f63;
+      --brand-light: #5790e6;
+      --accent-teal: #0b6e97;
+      --surface: #f4f4f4;
+      --surface-card: #ffffff;
+      --ink: #0a0a0a;
+      --ink-soft: #717784;
+      --ghost: #d7dae1;
+      --hairline: #e6e8ec;
+      --on-brand: #ffffff;
+      --radius-card: 1.5rem;
+      --radius-card-lg: 2rem;
+      --radius-pill: 62.5rem;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+    }
+    
+    @media (max-width: 1920px) { html { font-size: 0.833333vw; } }
+    @media (max-width: 1440px) { html { font-size: 1.111111vw; } }
+    @media (max-width: 1024px) { html { font-size: 1.5625vw; } }
+    @media (max-width: 640px)  { html { font-size: 4.444444vw; } }
+
+    body {
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: "Onest", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    html.locked {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+    html.locked body {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, a {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--brand-light);
+      outline-offset: 2px;
+    }
+
+    main {
+      width: 100%;
+      overflow-x: clip;
+      padding: 0.5rem;
+    }
+
+    @media (min-width: 640px) {
+      main { padding: 0.75rem; }
+    }
+
+    /* TYPOGRAPHY */
+    .font-medium { font-weight: 500; }
+    .uppercase { text-transform: uppercase; }
+    .tracking-wide { letter-spacing: 0.05em; }
+    .tracking-wider { letter-spacing: 0.18em; }
+    .tracking-widest { letter-spacing: 0.2em; }
+    .tracking-tight { letter-spacing: -0.02em; }
+    .leading-none { line-height: 1; }
+    .leading-tight { line-height: 1.1; }
+    .leading-relaxed { line-height: 1.6; }
+
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-base { font-size: 1rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-4xl { font-size: 2.25rem; }
+    .text-5xl { font-size: 3rem; }
+    .text-6xl { font-size: 3.75rem; }
+    .text-7xl { font-size: 4.5rem; }
+
+    /* LAYOUT */
+    .flex { display: flex; }
+    .flex-col { display: flex; flex-direction: column; }
+    .items-center { align-items: center; }
+    .items-end { align-items: flex-end; }
+    .items-stretch { align-items: stretch; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-end { justify-content: flex-end; }
+    .flex-1 { flex: 1; }
+    .grid { display: grid; }
+    .absolute { position: absolute; }
+    .relative { position: relative; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .overflow-hidden { overflow: hidden; }
+    .z-10 { z-index: 10; }
+    .z-20 { z-index: 20; }
+    .w-full { width: 100%; }
+    .h-full { height: 100%; }
+
+    /* SHARED COMPONENTS */
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: var(--radius-pill);
+      padding: 0.875rem 1.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .pill-btn.light {
+      background: var(--on-brand);
+      color: var(--brand-deep);
+    }
+    .pill-btn.light:hover {
+      background: var(--brand-light);
+      color: var(--on-brand);
+    }
+    .pill-btn.solid {
+      background: var(--ink);
+      color: var(--on-brand);
+    }
+    .pill-btn.solid:hover {
+      background: var(--brand-deep);
+    }
+    
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+    .eyebrow .dot {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: var(--radius-pill);
+    }
+    .eyebrow.dark { color: var(--ink-soft); }
+    .eyebrow.dark .dot { background: var(--brand); }
+    .eyebrow.light { color: rgba(255,255,255,0.7); }
+    .eyebrow.light .dot { background: var(--brand-light); }
+
+    .clip-box {
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .clip-inner {
+      display: inline-block;
+      transform: translateY(115%);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    /* SECTIONS */
+    /* 1. Loader */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--brand-deep);
+      color: var(--on-brand);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      will-change: transform;
+    }
+    #loader-logo {
+      opacity: 0;
+      transform: translateY(1rem);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    #loader-track {
+      width: 10rem;
+      height: 1px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.2);
+      overflow: hidden;
+    }
+    #loader-fill {
+      width: 100%;
+      height: 100%;
+      background: var(--on-brand);
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+
+    /* 2. Hero */
+    #hero {
+      position: relative;
+      isolate: isolation;
+      overflow: hidden;
+      border-radius: var(--radius-card-lg);
+      background: var(--brand-deep);
+      color: var(--on-brand);
+      height: calc(100svh - 1rem);
+      min-height: 36rem;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (min-width: 640px) {
+      #hero { height: calc(100svh - 1.5rem); }
+    }
+    #hero-bg {
+      position: absolute;
+      left: 0; right: 0; top: -16%;
+      height: 132%; width: 100%;
+      z-index: -10;
+      will-change: transform;
+    }
+    #hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    #hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(15,47,99,0.65), rgba(15,47,99,0.35), rgba(15,47,99,0.75));
+    }
+    
+    header {
+      padding: 1.5rem 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (min-width: 640px) { header { padding: 2rem 2.5rem 0; } }
+    .nav-links a { opacity: 0.9; transition: opacity 0.2s; }
+    .nav-links a:hover { opacity: 1; }
+    
+    .burger {
+      width: 2.5rem; height: 2.5rem;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: background 0.2s;
+    }
+    .burger:hover { background: rgba(255,255,255,0.25); }
+    .burger span { width: 1rem; height: 1px; background: #fff; }
+
+    .hero-title-wrap {
+      padding: 1rem 1.5rem 0;
+    }
+    @media (min-width: 640px) { .hero-title-wrap { padding: 1rem 2.5rem 0; } }
+    #hero-title {
+      font-size: 12.5vw;
+      line-height: 0.85;
+      white-space: nowrap;
+    }
+    
+    .hero-bottom {
+      margin-top: auto;
+      padding: 0 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .hero-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0 2.5rem 2.5rem;
+      }
+    }
+    .hero-tagline {
+      font-size: 2.4rem;
+      line-height: 0.95;
+      color: rgba(255,255,255,0.85);
+      padding-bottom: 0.14em;
+    }
+
+    .glass-card {
+      border-radius: var(--radius-card);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 4px 24px rgba(15,47,99,0.2);
+      backdrop-filter: blur(12px);
+      padding: 0.75rem;
+    }
+
+    /* 3. Trust */
+    #trust {
+      position: relative;
+      isolate: isolation;
+      overflow: hidden;
+      background: var(--background);
+      padding: 4rem 1.5rem;
+    }
+    @media (min-width: 640px) { #trust { padding: 5rem 2.5rem; } }
+    
+    #trust-title {
+      font-size: 8.2vw;
+      line-height: 1.02;
+      max-width: 88rem;
+      margin: 3rem auto 0;
+      pointer-events: none;
+      user-select: none;
+    }
+    .ghost-word { color: var(--ghost); }
+    .ink-word { color: var(--ink); }
+
+    .coach-card {
+      width: 13rem;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-card);
+      background: var(--brand);
+      overflow: hidden;
+      position: relative;
+      transform: rotate(6deg);
+      margin: 2rem auto;
+    }
+    @media (min-width: 640px) {
+      .coach-card {
+        position: absolute;
+        width: 16rem;
+        left: 50%; top: 50%;
+        margin: 0;
+        transform: translate(-50%, -50%) rotate(6deg);
+      }
+    }
+    
+    .arrow-btn {
+      width: 3rem; height: 3rem;
+      border-radius: var(--radius-pill);
+      display: grid;
+      place-items: center;
+      transition: background 0.2s, border 0.2s, color 0.2s;
+    }
+    @media (min-width: 640px) { .arrow-btn { width: 3.5rem; height: 3.5rem; } }
+    .arrow-btn.outline {
+      border: 1px solid var(--hairline);
+      color: var(--ink);
+    }
+    .arrow-btn.outline:hover { border-color: var(--ink); }
+    .arrow-btn.solid {
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      color: var(--on-brand);
+    }
+    .arrow-btn.solid:hover { background: var(--brand-deep); border-color: var(--brand-deep); }
+    
+    /* 4. Programs */
+    #programs {
+      background: var(--surface);
+      padding: 6rem 1.5rem;
+    }
+    @media (min-width: 640px) { #programs { padding: 6rem 2.5rem; } }
+    
+    .program-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.75rem 0;
+      border-top: 1px solid var(--hairline);
+      transition: background 0.2s;
+    }
+    .program-row:last-child { border-bottom: 1px solid var(--hairline); }
+    .program-row:focus-visible { background: var(--background); }
+    .program-arrow {
+      width: 2.75rem; height: 2.75rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--hairline);
+      display: grid; place-items: center;
+      opacity: 0.55;
+    }
+
+    /* 5. Facilities */
+    #facilities {
+      background: var(--background);
+      border-radius: var(--radius-card-lg);
+      margin-top: -2.5rem;
+      padding: 4rem 1.5rem 5rem;
+      position: relative;
+      z-index: 10;
+    }
+    @media (min-width: 640px) { #facilities { padding: 4rem 2.5rem 5rem; } }
+    
+    .court-tile {
+      aspect-ratio: 3/4;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      position: relative;
+      background: var(--surface);
+    }
+    
+    /* 6. Stats */
+    #stats {
+      background: var(--brand-deep);
+      color: var(--on-brand);
+      border-radius: var(--radius-card-lg);
+      margin-top: 0.75rem;
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 640px) { #stats { padding: 5rem 2.5rem; } }
+    .stat-cell {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 1.25rem;
+    }
+    
+    /* 7. Testimonials */
+    #testimonials {
+      background: var(--background);
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 640px) { #testimonials { padding: 6rem 2.5rem; } }
+    
+    /* 8. Footer */
+    #contact {
+      background: var(--brand-deep);
+      color: var(--on-brand);
+      border-radius: var(--radius-card-lg);
+      margin-top: 0.75rem;
+      padding: 3.5rem 1.5rem;
+    }
+    @media (min-width: 640px) { #contact { padding: 4rem 2.5rem; } }
+    
+    /* Modals */
+    #modal, #menu {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      display: none;
+    }
+    #menu { z-index: 70; }
+    #modal.active, #menu.active {
+      display: flex;
+    }
+    .modal-backdrop, .menu-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,47,99,0.4);
+      backdrop-filter: blur(4px);
+    }
+    .menu-backdrop { background: var(--brand-deep); backdrop-filter: none; }
+    
+    .modal-panel {
+      position: relative;
+      max-height: 92svh;
+      overflow-y: auto;
+      border-radius: var(--radius-card-lg);
+      background: var(--surface-card);
+      padding: 1.5rem;
+      color: var(--ink);
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(15,47,99,0.2);
+      z-index: 100;
+    }
+    @media (min-width: 640px) {
+      .modal-panel { padding: 2rem; max-width: 32rem; }
+    }
+    .menu-panel {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0.5rem;
+      z-index: 80;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (min-width: 640px) { .menu-panel { padding: 0.75rem; } }
+    .menu-inner {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+    @media (min-width: 640px) { .menu-inner { padding: 2.5rem; } }
+
+    .form-input {
+      width: 100%;
+      border-radius: 0.75rem;
+      border: 1px solid var(--hairline);
+      background: var(--background);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.1.18/+esm"
+    }
+  }
+  </script>
+</head>
+<body>
+  
+  <div id="loader">
+    <div id="loader-logo">
+      <svg viewBox="0 0 24 24" style="width:1.75rem; height:1.75rem;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M4.8 5.6A9 9 0 0 0 4.8 18.4"/>
+        <path d="M19.2 5.6a9 9 0 0 1 0 12.8"/>
+      </svg>
+      <span class="font-medium uppercase tracking-widest text-2xl">Baseline</span>
+    </div>
+    <div id="loader-track">
+      <div id="loader-fill"></div>
+    </div>
+  </div>
+
+  <main>
+    <section id="hero">
+      <div id="hero-bg">
+        <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/hero/hero-court.webp" alt="Player lunging for a shot on a hard court" fetchpriority="high">
+      </div>
+      
+      <header>
+        <nav class="nav-links flex-1 hidden lg:flex gap-8 text-xs font-medium uppercase tracking-widest">
+          <a href="#programs">Programs & Coaches</a>
+          <a href="#facilities">Club & Events</a>
+        </nav>
+        <div class="flex-1 flex justify-center lg:justify-center justify-start">
+          <div class="flex items-center gap-2 font-medium uppercase tracking-widest text-base">
+            <svg viewBox="0 0 24 24" style="width:1.25rem; height:1.25rem;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/><path d="M4.8 5.6A9 9 0 0 0 4.8 18.4"/><path d="M19.2 5.6a9 9 0 0 1 0 12.8"/>
+            </svg>
+            Baseline
+          </div>
+        </div>
+        <div class="flex-1 flex justify-end items-center gap-4 sm:gap-5 text-xs font-medium uppercase tracking-wide">
+          <button class="hidden sm:block hover:underline" onclick="openModal()">Book a Visit</button>
+          <button class="burger" onclick="openMenu()">
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="hero-title-wrap">
+        <h1 id="hero-title" class="font-medium uppercase tracking-tight">Own The Court</h1>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="hero-tagline font-medium uppercase tracking-tight">
+          <p id="hero-tagline-1">Show Up,</p>
+          <p id="hero-tagline-2">Level Up</p>
+        </div>
+        
+        <div class="flex items-end gap-4">
+          <div id="hero-slider" class="hidden md:flex flex-col gap-3" style="width:16rem;">
+            <article class="glass-card flex items-center gap-3">
+              <img id="slider-img" src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/2.webp" class="w-14 h-14 rounded-xl object-cover" alt="Slide">
+              <div class="flex-col justify-center">
+                <div id="slider-brand" class="text-[0.7rem] font-medium uppercase tracking-wide">Baseline Pro</div>
+                <div id="slider-title" class="text-[0.7rem] uppercase opacity-80">Featured Gear</div>
+                <a href="#" id="slider-cta" class="text-[0.65rem] underline mt-1 block">Shop the kit &rarr;</a>
+              </div>
+            </article>
+            <div class="flex gap-2 justify-center" id="slider-dots">
+              <button class="dot-btn active"><div class="dot bg-white w-5 h-1.5 rounded-full transition-all"></div></button>
+              <button class="dot-btn"><div class="dot bg-white/40 w-1.5 h-1.5 rounded-full transition-all"></div></button>
+              <button class="dot-btn"><div class="dot bg-white/40 w-1.5 h-1.5 rounded-full transition-all"></div></button>
+            </div>
+          </div>
+          
+          <article id="hero-members" class="glass-card flex items-stretch gap-3 w-full max-w-[20rem] sm:max-w-[15rem]">
+            <div class="flex flex-col justify-between flex-1">
+              <div class="text-3xl font-medium leading-none">9K+</div>
+              <div>
+                <div class="flex -space-x-2 mb-1">
+                  <div class="w-5 h-5 rounded-full border border-brand-deep/40" style="background:#5790e6"></div>
+                  <div class="w-5 h-5 rounded-full border border-brand-deep/40" style="background:#c2e029"></div>
+                  <div class="w-5 h-5 rounded-full border border-brand-deep/40" style="background:#0b6e97"></div>
+                  <div class="w-5 h-5 rounded-full border border-brand-deep/40" style="background:#ffffff"></div>
+                </div>
+                <div class="text-[0.65rem] opacity-80">Members on court</div>
+              </div>
+            </div>
+            <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/1.webp" class="w-16 aspect-[3/4] rounded-xl object-cover" alt="Member">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="trust">
+      <div class="relative z-20 flex flex-col sm:flex-row justify-between gap-6">
+        <div id="trust-badge-1" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-[var(--surface)] flex flex-col items-center justify-center text-center">
+          <div class="text-2xl font-medium">100%</div>
+          <div class="text-[0.6rem] text-[var(--ink-soft)] max-w-[7em] mt-1 leading-tight">Coaching built around your game</div>
+        </div>
+        <article id="trust-badge-2" class="max-w-[28rem] rounded-[var(--radius-card)] bg-[var(--surface)] p-5 sm:p-6 flex flex-col gap-4 sm:gap-5">
+          <div class="rounded-xl bg-[var(--background)] px-4 py-2 text-xl font-medium self-start">#01</div>
+          <div>
+            <h3 class="text-lg font-medium">Trusted by serious players</h3>
+            <p class="text-xs text-[var(--ink-soft)] leading-relaxed mt-1">From first-timers to nationally ranked juniors, players train here because the progress shows up on the scoreboard.</p>
+          </div>
+        </article>
+      </div>
+
+      <h2 id="trust-title">
+        <div class="flex justify-between w-full px-[5%]">
+          <span class="ghost-word" id="tw-1">Expert</span>
+          <span class="ghost-word" id="tw-2">Result-</span>
+        </div>
+        <div class="flex justify-between w-full px-[2%]">
+          <span class="ink-word" id="tw-3">Driven</span>
+          <span class="ghost-word" id="tw-4">Coaching</span>
+        </div>
+      </h2>
+
+      <figure id="coach-card" class="coach-card z-10">
+        <img id="coach-img" src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/5.webp" class="w-full h-full object-cover" alt="Coach">
+        <div class="absolute inset-x-3 bottom-3 rounded-xl bg-[#0f2f63]/40 backdrop-blur text-white p-2 sm:p-3">
+          <div id="coach-name" class="text-sm font-medium">Marco Vidal</div>
+          <div id="coach-role" class="text-[0.65rem] opacity-80">Head Coach</div>
+        </div>
+      </figure>
+
+      <div class="relative z-20 mt-12 sm:mt-24 flex justify-between items-center">
+        <button class="arrow-btn outline" onclick="prevCoach()">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="transform:scaleX(-1)"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="flex gap-2" id="coach-dots">
+          <button class="dot-btn active"><div class="dot bg-[var(--ink)] w-5 h-1.5 rounded-full"></div></button>
+          <button class="dot-btn"><div class="dot bg-[var(--ghost)] w-1.5 h-1.5 rounded-full"></div></button>
+          <button class="dot-btn"><div class="dot bg-[var(--ghost)] w-1.5 h-1.5 rounded-full"></div></button>
+        </div>
+        <button class="arrow-btn solid" onclick="nextCoach()">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section id="programs">
+      <div class="eyebrow dark">
+        <div class="dot"></div> Training programs
+      </div>
+      <h2 id="programs-title" class="text-5xl font-medium leading-tight tracking-tight mt-4">
+        Built for<br>every level
+      </h2>
+      <ul class="mt-14 flex flex-col">
+        <a href="#junior" class="program-row" id="prog-1">
+          <span class="w-10 text-sm font-medium text-[var(--ink-soft)]">01</span>
+          <div class="flex-1">
+            <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Junior Development</h3>
+            <p class="text-sm text-[var(--ink-soft)] mt-1">Fundamentals, footwork, and match play for ages 6–14.</p>
+          </div>
+          <div class="program-arrow"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </a>
+        <a href="#performance" class="program-row" id="prog-2">
+          <span class="w-10 text-sm font-medium text-[var(--ink-soft)]">02</span>
+          <div class="flex-1">
+            <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Performance Squad</h3>
+            <p class="text-sm text-[var(--ink-soft)] mt-1">High-volume training for competitive and ranked players.</p>
+          </div>
+          <div class="program-arrow"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </a>
+        <a href="#adult" class="program-row" id="prog-3">
+          <span class="w-10 text-sm font-medium text-[var(--ink-soft)]">03</span>
+          <div class="flex-1">
+            <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Adult Clinics</h3>
+            <p class="text-sm text-[var(--ink-soft)] mt-1">Small-group sessions to sharpen technique and fitness.</p>
+          </div>
+          <div class="program-arrow"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </a>
+        <a href="#private" class="program-row" id="prog-4">
+          <span class="w-10 text-sm font-medium text-[var(--ink-soft)]">04</span>
+          <div class="flex-1">
+            <h3 class="text-2xl sm:text-3xl font-medium tracking-tight">Private Coaching</h3>
+            <p class="text-sm text-[var(--ink-soft)] mt-1">One-to-one sessions tailored to your goals and schedule.</p>
+          </div>
+          <div class="program-arrow"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        </a>
+      </ul>
+    </section>
+
+    <section id="facilities">
+      <div class="grid grid-cols-1 md:grid-cols-2 items-end gap-10">
+        <div class="max-w-[24rem]">
+          <img id="fac-img" src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/3.webp" class="w-16 h-16 rounded-[var(--radius-card)] object-cover" alt="Clay">
+          <h2 id="facilities-title" class="text-5xl font-medium leading-tight tracking-tight mt-6">
+            Tour Our<br>World-Class<br>Courts
+          </h2>
+          <p id="facilities-body" class="text-sm text-[var(--ink-soft)] max-w-[20rem] mt-6 leading-relaxed">
+            Reserve a court for focused practice, squad drills, or private sessions — and train in the same conditions you'll compete in.
+          </p>
+        </div>
+        <div class="flex items-end gap-5">
+          <figure class="court-tile flex-1" id="tile-1">
+            <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/1.webp" class="w-full h-full object-cover" alt="Redline Clay">
+            <figcaption class="absolute inset-x-3 bottom-3 rounded-xl backdrop-blur text-white p-3 sm:p-4 bg-[#0f2f63]/40">
+              <div class="text-sm font-medium">Redline Clay</div>
+              <div class="text-[0.65rem] opacity-85 mt-1 leading-relaxed">A fast outdoor clay court tuned for long, physical rallies.</div>
+            </figcaption>
+          </figure>
+          <figure class="court-tile flex-1 mb-8" id="tile-2">
+            <img src="https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/4.webp" class="w-full h-full object-cover" alt="Harbor Court">
+            <figcaption class="absolute inset-x-3 bottom-3 rounded-xl backdrop-blur text-white p-3 sm:p-4 bg-[#0b6e97]/55">
+              <div class="text-sm font-medium">Harbor Court</div>
+              <div class="text-[0.65rem] opacity-85 mt-1 leading-relaxed">A sheltered hard court built for precision and night play.</div>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="stats">
+      <div class="eyebrow light">
+        <div class="dot"></div> By the numbers
+      </div>
+      <h2 id="stats-title" class="text-5xl font-medium leading-tight tracking-tight mt-4">
+        A club that<br>keeps score
+      </h2>
+      <dl class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mt-16">
+        <div class="stat-cell" id="stat-1">
+          <dd class="text-6xl sm:text-7xl font-medium tracking-tight leading-none">24</dd>
+          <dt class="text-sm text-white/65 mt-3">Certified coaches</dt>
+        </div>
+        <div class="stat-cell" id="stat-2">
+          <dd class="text-6xl sm:text-7xl font-medium tracking-tight leading-none">12</dd>
+          <dt class="text-sm text-white/65 mt-3">Championship courts</dt>
+        </div>
+        <div class="stat-cell" id="stat-3">
+          <dd class="text-6xl sm:text-7xl font-medium tracking-tight leading-none">9K+</dd>
+          <dt class="text-sm text-white/65 mt-3">Members training</dt>
+        </div>
+        <div class="stat-cell" id="stat-4">
+          <dd class="text-6xl sm:text-7xl font-medium tracking-tight leading-none">15</dd>
+          <dt class="text-sm text-white/65 mt-3">Years on the baseline</dt>
+        </div>
+      </dl>
+    </section>
+
+    <section id="testimonials">
+      <div class="eyebrow dark">
+        <div class="dot"></div> What players say
+      </div>
+      <h2 id="testimonials-title" class="text-5xl font-medium leading-tight tracking-tight mt-4">
+        Loved by<br>the locker room
+      </h2>
+      <ul class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-14">
+        <li class="flex flex-col justify-between h-full rounded-[var(--radius-card)] bg-[var(--surface)] p-7" id="test-1">
+          <div>
+            <div class="text-4xl text-[var(--brand)] leading-none font-medium">"</div>
+            <blockquote class="text-lg text-[var(--ink)] leading-relaxed mt-4">I added a level to my serve in one season. The coaching is detailed and it actually sticks.</blockquote>
+          </div>
+          <figcaption class="border-t border-[var(--hairline)] pt-4 mt-6">
+            <div class="font-medium">Priya Anand</div>
+            <div class="text-sm text-[var(--ink-soft)] mt-1">Performance Squad</div>
+          </figcaption>
+        </li>
+        <li class="flex flex-col justify-between h-full rounded-[var(--radius-card)] bg-[var(--surface)] p-7" id="test-2">
+          <div>
+            <div class="text-4xl text-[var(--brand)] leading-none font-medium">"</div>
+            <blockquote class="text-lg text-[var(--ink)] leading-relaxed mt-4">Best courts in the city and a team that treats every member like a competitor.</blockquote>
+          </div>
+          <figcaption class="border-t border-[var(--hairline)] pt-4 mt-6">
+            <div class="font-medium">Lukas Brenner</div>
+            <div class="text-sm text-[var(--ink-soft)] mt-1">Adult Clinics</div>
+          </figcaption>
+        </li>
+        <li class="flex flex-col justify-between h-full rounded-[var(--radius-card)] bg-[var(--surface)] p-7" id="test-3">
+          <div>
+            <div class="text-4xl text-[var(--brand)] leading-none font-medium">"</div>
+            <blockquote class="text-lg text-[var(--ink)] leading-relaxed mt-4">My daughter went from shy beginner to club champion. Worth every minute.</blockquote>
+          </div>
+          <figcaption class="border-t border-[var(--hairline)] pt-4 mt-6">
+            <div class="font-medium">Dana Okafor</div>
+            <div class="text-sm text-[var(--ink-soft)] mt-1">Parent, Junior Development</div>
+          </figcaption>
+        </li>
+      </ul>
+    </section>
+
+    <footer id="contact">
+      <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-8 border-b border-white/15 pb-14">
+        <div>
+          <div class="eyebrow light">
+            <div class="dot"></div> Get started
+          </div>
+          <h2 class="text-6xl font-medium leading-[0.92] tracking-tight mt-4">
+            Ready to<br>play?
+          </h2>
+        </div>
+        <button class="pill-btn light" id="footer-cta" onclick="openModal()">
+          Book a Visit
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-10 py-14">
+        <div class="max-w-[20rem]">
+          <div class="flex items-center gap-2 font-medium uppercase tracking-widest text-lg">
+            <svg viewBox="0 0 24 24" style="width:1.5rem; height:1.5rem;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/><path d="M4.8 5.6A9 9 0 0 0 4.8 18.4"/><path d="M19.2 5.6a9 9 0 0 1 0 12.8"/>
+            </svg>
+            Baseline
+          </div>
+          <p class="text-sm text-white/65 mt-4 leading-relaxed">A members' tennis club and academy where focused coaching meets championship courts.</p>
+          <address class="not-italic text-sm text-white/80 mt-6 flex flex-col gap-2">
+            <a href="mailto:play@baseline.club" class="hover:text-white">play@baseline.club</a>
+            <a href="tel:+12125550148" class="hover:text-white">+1 (212) 555-0148</a>
+            <span class="text-white/55">120 Court Lane, New York</span>
+          </address>
+        </div>
+        
+        <nav class="flex flex-col gap-5">
+          <h4 class="text-xs font-medium uppercase tracking-wider text-white/50">Programs</h4>
+          <ul class="flex flex-col gap-3 text-sm text-white/80">
+            <li><a href="#junior" class="hover:text-white">Junior Development</a></li>
+            <li><a href="#performance" class="hover:text-white">Performance Squad</a></li>
+            <li><a href="#adult" class="hover:text-white">Adult Clinics</a></li>
+            <li><a href="#private" class="hover:text-white">Private Coaching</a></li>
+          </ul>
+        </nav>
+        
+        <nav class="flex flex-col gap-5">
+          <h4 class="text-xs font-medium uppercase tracking-wider text-white/50">Club</h4>
+          <ul class="flex flex-col gap-3 text-sm text-white/80">
+            <li><a href="#membership" class="hover:text-white">Membership</a></li>
+            <li><a href="#facilities" class="hover:text-white">Facilities</a></li>
+            <li><a href="#club" class="hover:text-white">Events</a></li>
+            <li><a href="#shop" class="hover:text-white">Pro Shop</a></li>
+          </ul>
+        </nav>
+        
+        <nav class="flex flex-col gap-5">
+          <h4 class="text-xs font-medium uppercase tracking-wider text-white/50">Company</h4>
+          <ul class="flex flex-col gap-3 text-sm text-white/80">
+            <li><a href="#about" class="hover:text-white">About</a></li>
+            <li><a href="#programs" class="hover:text-white">Coaches</a></li>
+            <li><a href="#careers" class="hover:text-white">Careers</a></li>
+            <li><a href="#contact" class="hover:text-white">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      
+      <div class="border-t border-white/15 pt-8 text-sm text-white/60 flex flex-col sm:flex-row justify-between items-center gap-5">
+        <p>© 2026 Baseline Tennis Club. All rights reserved.</p>
+        <div class="flex gap-5">
+          <a href="#instagram" class="hover:text-white transition-colors">Instagram</a>
+          <a href="#x" class="hover:text-white transition-colors">X</a>
+          <a href="#youtube" class="hover:text-white transition-colors">YouTube</a>
+          <a href="#linkedin" class="hover:text-white transition-colors">LinkedIn</a>
+        </div>
+        <div class="flex gap-5">
+          <a href="#privacy" class="hover:text-white transition-colors">Privacy</a>
+          <a href="#terms" class="hover:text-white transition-colors">Terms</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <div id="modal" class="items-end sm:items-center justify-center p-3 sm:p-6">
+    <div id="modal-bg" class="modal-backdrop" onclick="closeModal()"></div>
+    <div id="modal-panel" class="modal-panel" role="dialog" aria-modal="true">
+      <div id="modal-view-form">
+        <div class="flex justify-between items-start">
+          <div>
+            <div class="eyebrow dark">
+              <div class="dot"></div> Book a visit
+            </div>
+            <h2 id="modal-title" class="text-4xl sm:text-5xl font-medium leading-tight tracking-tight mt-3">
+              Come see<br>the courts
+            </h2>
+          </div>
+          <button class="w-10 h-10 rounded-full bg-[var(--surface)] hover:bg-[var(--hairline)] flex items-center justify-center transition-colors" onclick="closeModal()" id="modal-close-btn">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <form class="mt-7 flex flex-col gap-4" novalidate onsubmit="submitForm(event)">
+          <div>
+            <label class="block text-xs font-medium uppercase tracking-wider text-[var(--ink-soft)] mb-2">Full name</label>
+            <input type="text" id="modal-name" class="form-input" placeholder="Alex Rivera" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium uppercase tracking-wider text-[var(--ink-soft)] mb-2">Email</label>
+            <input type="email" class="form-input" placeholder="you@email.com" required>
+          </div>
+          <div>
+            <label class="block text-xs font-medium uppercase tracking-wider text-[var(--ink-soft)] mb-2">What would you like to play?</label>
+            <textarea class="form-input" rows="3" placeholder="I'd love to try a private lesson on the clay courts…"></textarea>
+          </div>
+          <button type="submit" id="modal-submit" class="pill-btn solid justify-center mt-2">Request a visit</button>
+        </form>
+      </div>
+      <div id="modal-view-success" class="hidden flex-col items-center text-center mt-8 p-6 bg-[var(--surface)] rounded-[var(--radius-card)]">
+        <div class="w-12 h-12 rounded-full bg-[var(--brand)] flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3 class="text-lg font-medium">Request received</h3>
+        <p class="text-sm text-[var(--ink-soft)] mt-2" id="success-msg">Thanks, there — our team will be in touch to lock in your visit.</p>
+        <button class="pill-btn solid mt-6" onclick="closeModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="menu">
+    <div id="menu-bg" class="menu-backdrop" onclick="closeMenu()"></div>
+    <div id="menu-panel" class="menu-panel">
+      <div class="menu-inner rounded-[var(--radius-card-lg)] bg-[var(--brand-deep)] text-white">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2 font-medium uppercase tracking-widest text-lg">
+            <svg viewBox="0 0 24 24" style="width:1.5rem; height:1.5rem;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/><path d="M4.8 5.6A9 9 0 0 0 4.8 18.4"/><path d="M19.2 5.6a9 9 0 0 1 0 12.8"/>
+            </svg>
+            Baseline
+          </div>
+          <button class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors" onclick="closeMenu()" id="menu-close-btn">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        
+        <nav class="flex-1 flex flex-col justify-center gap-2 mt-8">
+          <a href="#programs" class="menu-link block text-5xl sm:text-7xl font-medium tracking-tight hover:text-[var(--brand-light)] transition-colors" onclick="closeMenu()">Programs</a>
+          <a href="#facilities" class="menu-link block text-5xl sm:text-7xl font-medium tracking-tight hover:text-[var(--brand-light)] transition-colors" onclick="closeMenu()">Facilities</a>
+          <a href="#testimonials" class="menu-link block text-5xl sm:text-7xl font-medium tracking-tight hover:text-[var(--brand-light)] transition-colors" onclick="closeMenu()">Reviews</a>
+          <a href="#contact" class="menu-link block text-5xl sm:text-7xl font-medium tracking-tight hover:text-[var(--brand-light)] transition-colors" onclick="closeMenu()">Contact</a>
+        </nav>
+        
+        <div class="border-t border-white/15 pt-8 flex flex-col sm:flex-row justify-between items-center gap-6 mt-8">
+          <button class="pill-btn light w-full sm:w-auto justify-center" onclick="closeMenu(); setTimeout(openModal, 100);">Book a Visit</button>
+          <div class="flex gap-5 text-sm text-white/70">
+            <a href="#instagram" class="hover:text-white transition-colors">Instagram</a>
+            <a href="#x" class="hover:text-white transition-colors">X</a>
+            <a href="#youtube" class="hover:text-white transition-colors">YouTube</a>
+            <a href="#linkedin" class="hover:text-white transition-colors">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import Lenis from "lenis";
+
+    // Adaptive sizing
+    function updateRem() {
+      const FONT_BASE = 16, BASE_W = 1920, COEF = 0.6666;
+      if (window.innerWidth > BASE_W) {
+        const reduction = ((BASE_W - window.innerWidth) / BASE_W) * 100 * COEF;
+        const size = FONT_BASE - (FONT_BASE * reduction) / 100;
+        document.documentElement.style.fontSize = size + "px";
+      } else {
+        document.documentElement.style.removeProperty("font-size");
+      }
+    }
+    window.addEventListener("resize", updateRem);
+    updateRem();
+
+    // Springs & Animations
+    const springs = new Set();
+    function createSpring(config, onUpdate) {
+      const spring = {
+        value: 0, target: 0, velocity: 0,
+        tension: config.tension || 170, friction: config.friction || 26,
+        set: (v) => { spring.target = v; },
+        update: (dt) => {
+          spring.velocity += (-spring.tension * (spring.value - spring.target) - spring.friction * spring.velocity) * dt;
+          spring.value += spring.velocity * dt;
+          onUpdate(spring.value);
+        }
+      };
+      springs.add(spring);
+      return spring;
+    }
+
+    const easings = {
+      easeOutExpo: (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t),
+      easeOutQuart: (t) => 1 - Math.pow(1 - t, 4),
+      easeInOutCubic: (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+    };
+
+    function tween(duration, easing, onUpdate, onComplete) {
+      const start = performance.now();
+      const run = (now) => {
+        let t = (now - start) / duration;
+        if (t >= 1) { t = 1; onUpdate(easing(t)); if(onComplete) onComplete(); return; }
+        onUpdate(easing(t));
+        requestAnimationFrame(run);
+      };
+      requestAnimationFrame(run);
+    }
+
+    // Lenis
+    const lenis = new Lenis({ smoothWheel: true });
+    window.scrollTo(0,0);
+
+    let lastTime = performance.now();
+    function raf(now) {
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+      lenis.raf(now);
+      
+      const step = Math.min(dt, 0.05); // cap dt
+      springs.forEach(s => s.update(step));
+      
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Lock/Unlock Scroll
+    window.lockScroll = function() {
+      lenis.stop();
+      document.documentElement.classList.add("locked");
+    };
+    window.unlockScroll = function() {
+      lenis.start();
+      document.documentElement.classList.remove("locked");
+    };
+
+    // Observers
+    const inviewObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if(e.isIntersecting) {
+          const el = e.target;
+          setTimeout(() => el.reveal(), el.dataset.delay || 0);
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    function wrapWords(selector, staggered = false) {
+      document.querySelectorAll(selector).forEach(el => {
+        const text = el.textContent.trim();
+        el.innerHTML = "";
+        const words = text.split(" ");
+        words.forEach((w, i) => {
+          const box = document.createElement("span");
+          box.className = "clip-box";
+          box.style.paddingBottom = "0.14em";
+          box.style.marginRight = i < words.length - 1 ? "0.25em" : "0";
+          const inner = document.createElement("span");
+          inner.className = "clip-inner";
+          inner.textContent = w;
+          box.appendChild(inner);
+          el.appendChild(box);
+        });
+      });
+    }
+
+    // Text Reveal logic
+    function revealText(selector, stagger, duration, easingName, isLines = false) {
+      const els = document.querySelectorAll(selector + " .clip-inner");
+      els.forEach((el, i) => {
+        setTimeout(() => {
+          tween(duration, easings[easingName], (v) => {
+            el.style.transform = `translateY(${(1-v)*115}%)`;
+            el.style.opacity = v;
+          });
+        }, i * stagger);
+      });
+    }
+
+    // Specific text reveals
+    wrapWords("#hero-title");
+    wrapWords("#hero-tagline-1");
+    wrapWords("#hero-tagline-2");
+    wrapWords("#facilities-title");
+    wrapWords("#stats-title");
+    wrapWords("#testimonials-title");
+    wrapWords("#modal-title");
+
+    // Body word fade for facilities
+    const facBody = document.getElementById("facilities-body");
+    const facWords = facBody.textContent.trim().split(" ");
+    facBody.innerHTML = "";
+    facWords.forEach((w, i) => {
+      const sp = document.createElement("span");
+      sp.textContent = w + " ";
+      sp.style.display = "inline-block";
+      sp.style.opacity = 0;
+      sp.style.transform = "translateY(18px)";
+      facBody.appendChild(sp);
+    });
+
+    // Inview setups
+    function setupInview(el, y, delay, config) {
+      if(!el) return;
+      el.dataset.delay = delay;
+      el.style.opacity = 0;
+      el.style.transform = `translateY(${y}px)`;
+      const s = createSpring(config, v => {
+        el.style.opacity = v;
+        el.style.transform = `translateY(${(1-v)*y}px)`;
+      });
+      el.reveal = () => s.set(1);
+      inviewObserver.observe(el);
+    }
+    
+    // Stats Inview
+    for(let i=1; i<=4; i++) setupInview(document.getElementById(`stat-${i}`), 30, i*110, {tension:180,friction:24});
+    // Testimonials
+    for(let i=1; i<=3; i++) {
+      const card = document.getElementById(`test-${i}`);
+      setupInview(card, 40, i*120, {tension:180,friction:26});
+      // Hover Lift
+      const lift = createSpring({tension:300,friction:22}, v => { card.style.transform = `translateY(${-v*8}px)`; });
+      if(window.innerWidth > 768) {
+        card.addEventListener("mouseenter", () => lift.set(1));
+        card.addEventListener("mouseleave", () => lift.set(0));
+      }
+    }
+    // Facilities Tiles
+    setupInview(document.getElementById("tile-1"), 48, 0, {tension:180,friction:26});
+    setupInview(document.getElementById("tile-2"), 48, 140, {tension:180,friction:26});
+    [1,2].forEach(i => {
+      const tile = document.getElementById(`tile-${i}`);
+      const scaleS = createSpring({tension:300,friction:22}, v => tile.style.transform = `scale(${1 + v*0.03})`);
+      if(window.innerWidth > 768) {
+        tile.addEventListener("mouseenter", () => scaleS.set(1));
+        tile.addEventListener("mouseleave", () => scaleS.set(0));
+      }
+    });
+    // Programs Inview & Hover
+    for(let i=1; i<=4; i++) {
+      const row = document.getElementById(`prog-${i}`);
+      setupInview(row, 26, i*90, {tension:190,friction:26});
+      const arrow = row.querySelector(".program-arrow svg");
+      const hov = createSpring({tension:300,friction:20}, v => {
+        arrow.style.transform = `translateX(${v*8}px)`;
+        arrow.style.opacity = 0.55 + (v*0.45);
+      });
+      if(window.innerWidth > 768) {
+        row.addEventListener("mouseenter", () => hov.set(1));
+        row.addEventListener("mouseleave", () => hov.set(0));
+      }
+    }
+    // Footer CTA
+    setupInview(document.getElementById("footer-cta"), 20, 150, {tension:200,friction:24});
+    // Facilities Icon
+    setupInview(document.getElementById("fac-img"), 0, 0, {tension:240,friction:20});
+    document.getElementById("fac-img").style.transform = "scale(0.85)";
+    document.getElementById("fac-img").reveal = () => {
+      const s = createSpring({tension:240,friction:20}, v => {
+        document.getElementById("fac-img").style.opacity = v;
+        document.getElementById("fac-img").style.transform = `scale(${0.85 + v*0.15})`;
+      });
+      s.set(1);
+    }
+    
+    // Facilities Body reveal
+    document.getElementById("facilities-title").dataset.delay = 0;
+    document.getElementById("facilities-title").reveal = () => revealText("#facilities-title", 120, 950, "easeOutExpo");
+    inviewObserver.observe(document.getElementById("facilities-title"));
+    
+    facBody.dataset.delay = 250;
+    facBody.reveal = () => {
+      facBody.querySelectorAll("span").forEach((sp, i) => {
+        setTimeout(() => {
+          tween(700, easings.easeOutQuart, v => {
+            sp.style.opacity = v;
+            sp.style.transform = `translateY(${(1-v)*18}px)`;
+          });
+        }, i * 28);
+      });
+    }
+    inviewObserver.observe(facBody);
+    
+    // Stats Title
+    document.getElementById("stats-title").dataset.delay = 0;
+    document.getElementById("stats-title").reveal = () => revealText("#stats-title", 120, 950, "easeOutExpo");
+    inviewObserver.observe(document.getElementById("stats-title"));
+    
+    // Testimonials Title
+    document.getElementById("testimonials-title").dataset.delay = 0;
+    document.getElementById("testimonials-title").reveal = () => revealText("#testimonials-title", 120, 950, "easeOutExpo");
+    inviewObserver.observe(document.getElementById("testimonials-title"));
+
+    // Trust Badges
+    const b1 = document.getElementById("trust-badge-1");
+    b1.style.opacity = 0; b1.style.transform = "scale(0.9)";
+    b1.reveal = () => createSpring({tension:220,friction:22}, v => {
+      b1.style.opacity = v; b1.style.transform = `scale(${0.9 + v*0.1})`;
+    }).set(1);
+    inviewObserver.observe(b1);
+    setupInview(document.getElementById("trust-badge-2"), 24, 120, {tension:200,friction:26});
+
+    // Coach Card
+    const cc = document.getElementById("coach-card");
+    cc.style.opacity = 0; cc.style.transform = "translate(-50%, -50%) rotate(6deg) translateY(60px) scale(0.92)";
+    cc.reveal = () => createSpring({tension:170,friction:26}, v => {
+      cc.style.opacity = v;
+      if(window.innerWidth > 640) {
+        cc.style.transform = `translate(-50%, calc(-50% + ${(1-v)*60}px)) rotate(6deg) scale(${0.92 + v*0.08})`;
+      } else {
+        cc.style.transform = `translateY(${(1-v)*60}px) rotate(6deg) scale(${0.92 + v*0.08})`;
+      }
+    }).set(1);
+    inviewObserver.observe(cc);
+
+    // Hero Reveals (Gated)
+    const heroReady = () => {
+      setTimeout(() => revealText("#hero-title", 140, 1100, "easeOutExpo"), 0);
+      setTimeout(() => revealText("#hero-tagline-1", 110, 900, "easeOutExpo"), 350);
+      setTimeout(() => revealText("#hero-tagline-2", 110, 900, "easeOutExpo"), 460);
+      
+      const hs = document.getElementById("hero-slider");
+      if(hs) {
+        hs.style.opacity = 0; hs.style.transform = "translateY(28px)";
+        setTimeout(() => {
+          createSpring({tension:200,friction:26}, v => { hs.style.opacity=v; hs.style.transform=`translateY(${(1-v)*28}px)`; }).set(1);
+          startCarousel();
+        }, 650);
+      }
+      
+      const hm = document.getElementById("hero-members");
+      hm.style.opacity = 0; hm.style.transform = "translateY(28px)";
+      setTimeout(() => {
+        createSpring({tension:200,friction:26}, v => { hm.style.opacity=v; hm.style.transform=`translateY(${(1-v)*28}px)`; }).set(1);
+      }, 780);
+    };
+
+    // Loader Logic
+    lockScroll();
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const MIN_VISIBLE = prefersReducedMotion ? 200 : 1400;
+    const MAX_VISIBLE = prefersReducedMotion ? 200 : 2600;
+    const EXIT_MS = prefersReducedMotion ? 0 : 850;
+    
+    // Logo entrance
+    createSpring({tension:200,friction:22}, v => {
+      document.getElementById("loader-logo").style.opacity = v;
+      document.getElementById("loader-logo").style.transform = `translateY(${(1-v)*16}px)`;
+    }).set(1);
+    
+    // Track fill
+    setTimeout(() => {
+      tween(1280, easings.easeInOutCubic, v => {
+        document.getElementById("loader-fill").style.transform = `scaleX(${v})`;
+      });
+    }, 120);
+
+    let loadFired = false;
+    window.addEventListener("load", () => { loadFired = true; });
+    
+    setTimeout(() => {
+      const tryExit = () => {
+        if(loadFired || performance.now() > MAX_VISIBLE) {
+          heroReady();
+          unlockScroll();
+          tween(EXIT_MS, easings.easeInOutCubic, v => {
+            document.getElementById("loader").style.transform = `translateY(${-v*105}%)`;
+          }, () => {
+            document.getElementById("loader").remove();
+          });
+        } else {
+          requestAnimationFrame(tryExit);
+        }
+      };
+      tryExit();
+    }, MIN_VISIBLE);
+
+    // Hero Carousel
+    const slides = [
+      {img: "2.webp", brand: "Baseline Pro", title: "Featured Gear", cta: "Shop the kit"},
+      {img: "3.webp", brand: "Court Series", title: "Summer Drop", cta: "View the line"},
+      {img: "5.webp", brand: "Academy Kit", title: "Junior Range", cta: "Browse juniors"}
+    ];
+    let slideIdx = 0;
+    function setHeroSlide(idx) {
+      const art = document.querySelector("#hero-slider article");
+      const fade = createSpring({tension:210,friction:24}, v => {
+        art.style.opacity = v;
+        art.style.transform = `translateY(${(1-v)*16}px) scale(${0.96 + v*0.04})`;
+      });
+      fade.set(0);
+      setTimeout(() => {
+        document.getElementById("slider-img").src = `https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/${slides[idx].img}`;
+        document.getElementById("slider-brand").textContent = slides[idx].brand;
+        document.getElementById("slider-title").textContent = slides[idx].title;
+        document.getElementById("slider-cta").innerHTML = `${slides[idx].cta} &rarr;`;
+        fade.set(1);
+      }, 150); // wait for fade out
+      
+      const dots = document.querySelectorAll("#slider-dots .dot-btn");
+      dots.forEach((d, i) => {
+        if(i===idx) {
+          d.classList.add("active");
+          d.innerHTML = `<div class="dot bg-white w-5 h-1.5 rounded-full transition-all"></div>`;
+        } else {
+          d.classList.remove("active");
+          d.innerHTML = `<div class="dot bg-white/40 w-1.5 h-1.5 rounded-full transition-all"></div>`;
+        }
+      });
+    }
+    function startCarousel() {
+      setInterval(() => {
+        slideIdx = (slideIdx + 1) % 3;
+        setHeroSlide(slideIdx);
+      }, 3800);
+    }
+
+    // Trust Carousel
+    const trustSlides = [
+      {img:"5.webp", name:"Marco Vidal", role:"Head Coach", h:["Expert", "Result-", "Driven", "Coaching"]},
+      {img:"4.webp", name:"Elena Sokolova", role:"Performance Coach", h:["Sharper", "Faster", "Stronger", "Player"]},
+      {img:"1.webp", name:"James Okoro", role:"Juniors Lead", h:["Future", "Champions", "Start", "Here"]}
+    ];
+    let trustIdx = 0;
+    function setTrustSlide(idx) {
+      document.getElementById("tw-1").textContent = trustSlides[idx].h[0];
+      document.getElementById("tw-2").textContent = trustSlides[idx].h[1];
+      document.getElementById("tw-3").textContent = trustSlides[idx].h[2];
+      document.getElementById("tw-4").textContent = trustSlides[idx].h[3];
+      wrapWords("#tw-1"); wrapWords("#tw-2"); wrapWords("#tw-3"); wrapWords("#tw-4");
+      
+      revealText("#tw-1", 0, 700, "easeOutExpo");
+      revealText("#tw-2", 0, 700, "easeOutExpo");
+      revealText("#tw-3", 0, 700, "easeOutExpo");
+      revealText("#tw-4", 0, 700, "easeOutExpo");
+      
+      const cImg = document.getElementById("coach-img");
+      const fade = createSpring({tension:260,friction:26}, v => cImg.style.opacity = v);
+      fade.set(0);
+      setTimeout(() => {
+        cImg.src = `https://api.getlayers.ai/storage/v1/object/public/public/assets/baseline-88535e4000/${trustSlides[idx].img}`;
+        document.getElementById("coach-name").textContent = trustSlides[idx].name;
+        document.getElementById("coach-role").textContent = trustSlides[idx].role;
+        fade.set(1);
+      }, 50);
+
+      const dots = document.querySelectorAll("#coach-dots .dot-btn");
+      dots.forEach((d, i) => {
+        if(i===idx) d.innerHTML = `<div class="dot bg-[var(--ink)] w-5 h-1.5 rounded-full transition-all"></div>`;
+        else d.innerHTML = `<div class="dot bg-[var(--ghost)] w-1.5 h-1.5 rounded-full transition-all"></div>`;
+      });
+    }
+    window.nextCoach = () => { trustIdx = (trustIdx + 1) % 3; setTrustSlide(trustIdx); };
+    window.prevCoach = () => { trustIdx = (trustIdx - 1 + 3) % 3; setTrustSlide(trustIdx); };
+    setTrustSlide(0);
+
+    // Parallax Logic
+    lenis.on('scroll', (e) => {
+      const scroll = e.scroll;
+      // Hero Parallax
+      const hero = document.getElementById("hero");
+      const heroRect = hero.getBoundingClientRect();
+      if(heroRect.bottom > 0) {
+        const prog = 1 - (heroRect.bottom / (window.innerHeight + heroRect.height));
+        document.getElementById("hero-bg").style.transform = `translateY(${prog * 12}%)`;
+      }
+      
+      // Trust Parallax
+      const trust = document.getElementById("trust");
+      const trRect = trust.getBoundingClientRect();
+      if(trRect.top < window.innerHeight && trRect.bottom > 0) {
+        const prog = 1 - ((trRect.bottom) / (window.innerHeight + trRect.height));
+        document.getElementById("tw-1").style.transform = `translateX(${-3 + prog*6}%)`;
+        document.getElementById("tw-2").style.transform = `translateX(${3 - prog*6}%)`;
+        document.getElementById("tw-3").style.transform = `translateX(${-2 + prog*6}%)`;
+        document.getElementById("tw-4").style.transform = `translateX(${4 - prog*7}%)`;
+      }
+    });
+
+    // Modals
+    const modalFade = createSpring({tension:240,friction:30}, v => {
+      document.getElementById("modal-bg").style.opacity = v;
+    });
+    const modalPanelS = createSpring({tension:240,friction:26}, v => {
+      const p = document.getElementById("modal-panel");
+      p.style.opacity = v;
+      p.style.transform = `translateY(${(1-v)*28}px) scale(${0.96 + v*0.04})`;
+    });
+
+    window.openModal = () => {
+      document.getElementById("modal").classList.add("active");
+      lockScroll();
+      modalFade.set(1);
+      modalPanelS.set(1);
+      setTimeout(() => revealText("#modal-title", 90, 800, "easeOutExpo"), 0);
+      setTimeout(() => document.getElementById("modal-name").focus(), 120);
+    };
+    window.closeModal = () => {
+      modalFade.set(0);
+      modalPanelS.set(0);
+      setTimeout(() => {
+        document.getElementById("modal").classList.remove("active");
+        document.getElementById("modal-view-form").style.display = "block";
+        document.getElementById("modal-view-success").style.display = "none";
+        document.getElementById("modal-view-success").classList.remove("flex");
+        document.querySelector("form").reset();
+        document.getElementById("modal-submit").textContent = "Request a visit";
+        document.getElementById("modal-submit").disabled = false;
+        document.getElementById("modal-submit").style.opacity = 1;
+        unlockScroll();
+      }, 350);
+    };
+
+    window.submitForm = (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("modal-submit");
+      btn.textContent = "Sending...";
+      btn.disabled = true;
+      btn.style.opacity = 0.5;
+      const name = document.getElementById("modal-name").value.split(" ")[0] || "there";
+      setTimeout(() => {
+        document.getElementById("modal-view-form").style.display = "none";
+        document.getElementById("success-msg").textContent = `Thanks, ${name} — our team will be in touch to lock in your visit.`;
+        const succ = document.getElementById("modal-view-success");
+        succ.style.display = "flex";
+      }, 600);
+    };
+
+    // Menu
+    const menuFade = createSpring({tension:260,friction:30}, v => {
+      document.getElementById("menu-bg").style.opacity = v;
+    });
+    const menuPanelS = createSpring({tension:220,friction:28}, v => {
+      const p = document.getElementById("menu-panel");
+      p.style.opacity = v;
+      p.style.transform = `translateY(${(1-v)*-24}px)`;
+    });
+    const linkSprings = [];
+    document.querySelectorAll(".menu-link").forEach((l, i) => {
+      l.style.opacity = 0;
+      l.style.transform = "translateY(28px)";
+      linkSprings.push(createSpring({tension:200,friction:26}, v => {
+        l.style.opacity = v;
+        l.style.transform = `translateY(${(1-v)*28}px)`;
+      }));
+    });
+
+    window.openMenu = () => {
+      document.getElementById("menu").classList.add("active");
+      lockScroll();
+      menuFade.set(1);
+      menuPanelS.set(1);
+      linkSprings.forEach((s, i) => setTimeout(() => s.set(1), 120 + i*70));
+    };
+    window.closeMenu = () => {
+      menuFade.set(0);
+      menuPanelS.set(0);
+      linkSprings.forEach(s => s.set(0));
+      setTimeout(() => {
+        document.getElementById("menu").classList.remove("active");
+        unlockScroll();
+      }, 350);
+    };
+
+    // Hover Springs for X icons
+    if(window.innerWidth > 768) {
+      const mx = document.querySelector("#modal-close-btn svg");
+      const mxS = createSpring({tension:300,friction:18}, v => mx.style.transform = `rotate(${v*90}deg)`);
+      document.getElementById("modal-close-btn").addEventListener("mouseenter", () => mxS.set(1));
+      document.getElementById("modal-close-btn").addEventListener("mouseleave", () => mxS.set(0));
+      
+      const nx = document.querySelector("#menu-close-btn svg");
+      const nxS = createSpring({tension:300,friction:18}, v => nx.style.transform = `rotate(${v*90}deg)`);
+      document.getElementById("menu-close-btn").addEventListener("mouseenter", () => nxS.set(1));
+      document.getElementById("menu-close-btn").addEventListener("mouseleave", () => nxS.set(0));
+    }
+
+  </script>
+</body>
+</html>

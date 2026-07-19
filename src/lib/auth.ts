@@ -1,4 +1,5 @@
 import { auth, db } from "./firebase";
+export { auth };
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 

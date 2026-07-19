@@ -259,9 +259,19 @@ export default function EventsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
             <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-center">
               <style>{`
-                .rdp { --rdp-cell-size: 45px; --rdp-accent-color: #22d3ee; --rdp-background-color: rgba(34,211,238,0.2); }
-                .rdp-day_selected { font-weight: bold; }
+                .rdp { 
+                  --rdp-cell-size: 45px; 
+                  --rdp-accent-color: #22d3ee; 
+                  --rdp-background-color: rgba(34,211,238,0.2); 
+                  color: white;
+                }
+                .rdp-button { border-radius: 8px; }
+                .rdp-button:hover:not([disabled]):not(.rdp-day_selected) { background-color: rgba(255,255,255,0.1); }
+                .rdp-day_selected { background-color: #22d3ee !important; color: black !important; font-weight: bold; }
                 .rdp-day_today { color: #22d3ee; font-weight: bold; }
+                .rdp-head_cell { color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
+                .rdp-nav_button { color: white; }
+                .rdp-nav_button:hover { background-color: rgba(255,255,255,0.1); }
               `}</style>
               <DayPicker
                 mode="single"

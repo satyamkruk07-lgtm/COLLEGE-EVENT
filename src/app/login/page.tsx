@@ -42,10 +42,12 @@ export default function LoginPage() {
 
   // Handle Redirection based on Role
   const handleRedirect = (role: string | undefined) => {
+    // Using window.location.href instead of router.push to ensure cookies are sent cleanly 
+    // to the middleware on the first navigation, avoiding App Router caching race conditions.
     if (role === "admin") {
-      router.push("/admin-dashboard");
+      window.location.href = "/admin-dashboard";
     } else {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
   };
 

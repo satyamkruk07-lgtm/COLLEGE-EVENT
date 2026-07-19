@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { QRCodeSVG } from 'qrcode.react';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { logoutUser } from "@/lib/auth";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
@@ -11,6 +14,14 @@ import {
   getAllEvents, registerForEvent, getUserRegistrations, cancelRegistration, 
   getAllAnnouncements, EventData, RegistrationData, AnnouncementData
 } from "@/lib/firebase-db";
+
+const registrationSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  collegeEmail: z.string().email("Invalid email address"),
+  course: z.string().min(2, "Course is required"),
+  branch: z.string().min(2, "Branch is required"),
+  mobileNo: z.string().min(10, "Valid mobile number required"),
+});
 
 export default function StudentDashboard() {
   const router = useRouter();
@@ -23,17 +34,30 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
+  // Modals
+  const [isTicketsModalOpen, setIsTicketsModalOpen] = useState(false);
+  
+  // Registration Form State
+  const [selectedEventToRegister, setSelectedEventToRegister] = useState<EventData | null>(null);
+
+  const regForm = useForm<z.infer<typeof registrationSchema>>({
+    resolver: zodResolver(registrationSchema),
+    defaultValues: { name: "", collegeEmail: "", course: "", branch: "", mobileNo: "" }
+  });
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
+        regForm.setValue("name", user.displayName || "");
+        regForm.setValue("collegeEmail", user.email || "");
         fetchDashboardData(user.uid);
       } else {
-        router.push("/login");
+        window.location.href = "/login";
       }
     });
     return () => unsubscribe();
-  }, [router]);
+  }, [router, regForm]);
 
   const fetchDashboardData = async (userId: string) => {
     setLoading(true);
@@ -55,16 +79,28 @@ export default function StudentDashboard() {
     window.location.href = "/login";
   };
 
-  const handleRegister = async (event: EventData) => {
-    if (!currentUser) return;
-    setProcessingId(event.id!);
+  const openRegistrationModal = (event: EventData) => {
+    setSelectedEventToRegister(event);
+  };
+
+  const onRegisterSubmit = async (values: z.infer<typeof registrationSchema>) => {
+    if (!currentUser || !selectedEventToRegister) return;
+    
+    setProcessingId(selectedEventToRegister.id!);
     
     const res = await registerForEvent(
-      event.id!, currentUser.uid, currentUser.displayName || "Student", currentUser.email || ""
+      selectedEventToRegister.id!, 
+      currentUser.uid, 
+      values.name, 
+      values.collegeEmail,
+      values.course,
+      values.branch,
+      values.mobileNo
     );
     
     if (res.success) {
       toast.success(res.message);
+      setSelectedEventToRegister(null);
       await fetchDashboardData(currentUser.uid);
     } else {
       toast.error(res.message);
@@ -74,7 +110,7 @@ export default function StudentDashboard() {
 
   const handleCancelRegistration = async (eventId: string) => {
     if (!currentUser) return;
-    if (!confirm("Are you sure you want to cancel this registration?")) return;
+    if (!confirm("Are you sure you want to cancel this ticket?")) return;
     
     setProcessingId(eventId);
     const res = await cancelRegistration(eventId, currentUser.uid);
@@ -108,9 +144,14 @@ export default function StudentDashboard() {
             <h1 className="text-4xl font-black text-white tracking-tight">Evora Student Portal</h1>
             <p className="text-white/60 mt-2 font-medium">Welcome back, {currentUser?.displayName || "Student"}! Here are your updates.</p>
           </div>
-          <button onClick={handleLogout} className="px-6 py-2.5 text-sm font-bold uppercase tracking-widest text-white bg-white/5 border border-white/20 rounded-xl hover:bg-red-500/80 hover:border-red-500 transition-colors shadow-sm">
-            Logout
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <button onClick={() => setIsTicketsModalOpen(true)} className="w-full sm:w-auto bg-cyan-400 text-black px-6 py-2.5 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+              🎟️ My Tickets ({registrations.length})
+            </button>
+            <button onClick={handleLogout} className="w-full sm:w-auto px-6 py-2.5 text-sm font-bold uppercase tracking-widest text-white bg-white/5 border border-white/20 rounded-xl hover:bg-red-500/80 hover:border-red-500 transition-colors shadow-sm">
+              Logout
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -160,11 +201,11 @@ export default function StudentDashboard() {
                         </button>
                       ) : (
                         <button 
-                          onClick={() => handleRegister(event)}
-                          disabled={isSoldOut || processingId === event.id}
+                          onClick={() => openRegistrationModal(event)}
+                          disabled={isSoldOut}
                           className="bg-cyan-400 text-black px-6 py-3 rounded-xl text-sm font-bold uppercase tracking-widest w-full sm:w-auto hover:bg-cyan-300 transition-colors shadow-[0_0_15px_rgba(34,211,238,0.3)] disabled:opacity-50 disabled:shadow-none"
                         >
-                          {processingId === event.id ? "Processing..." : isSoldOut ? "Sold Out" : "Register Now"}
+                          {isSoldOut ? "Sold Out" : "Register Now"}
                         </button>
                       )}
                     </div>
@@ -174,7 +215,7 @@ export default function StudentDashboard() {
             )}
           </div>
 
-          {/* Sidebar - Announcements & Tickets */}
+          {/* Sidebar - Announcements */}
           <div className="space-y-6">
             
             {/* Announcements Box */}
@@ -200,47 +241,119 @@ export default function StudentDashboard() {
               </div>
             </div>
 
-            {/* My Registrations Box */}
-            <div className="bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-xl">
-              <h2 className="text-sm font-bold text-white/80 uppercase tracking-widest mb-4">My Registrations</h2>
+          </div>
+        </div>
+      </div>
+
+      {/* REGISTRATION FORM MODAL */}
+      {selectedEventToRegister && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !processingId && setSelectedEventToRegister(null)}></div>
+          <div className="bg-[#0c1421] border border-white/10 rounded-2xl w-full max-w-lg relative z-10 p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold text-white mb-2">Register for Event</h2>
+            <p className="text-white/50 text-sm mb-6">Complete your details to secure your seat for <strong className="text-white">{selectedEventToRegister.name}</strong>.</p>
+            
+            <form onSubmit={regForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">Full Name</label>
+                <input {...regForm.register("name")} className="w-full bg-white/5 border border-white/20 rounded-xl p-3 text-sm text-white" />
+                {regForm.formState.errors.name && <p className="text-red-400 text-xs mt-1">{regForm.formState.errors.name.message}</p>}
+              </div>
               
-              {loading ? (
-                <div className="text-center py-6 text-white/40 text-sm">Loading...</div>
-              ) : registrations.length === 0 ? (
-                <div className="text-center py-10 bg-white/5 rounded-xl border border-white/5 border-dashed">
-                  <p className="text-white/40 text-sm italic">You haven't registered for any events yet.</p>
+              <div>
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">College Email ID</label>
+                <input {...regForm.register("collegeEmail")} type="email" className="w-full bg-white/5 border border-white/20 rounded-xl p-3 text-sm text-white" />
+                {regForm.formState.errors.collegeEmail && <p className="text-red-400 text-xs mt-1">{regForm.formState.errors.collegeEmail.message}</p>}
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">Course (e.g. B.Tech)</label>
+                  <input {...regForm.register("course")} className="w-full bg-white/5 border border-white/20 rounded-xl p-3 text-sm text-white" />
+                  {regForm.formState.errors.course && <p className="text-red-400 text-xs mt-1">{regForm.formState.errors.course.message}</p>}
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {registrations.map(reg => {
-                    const event = events.find(e => e.id === reg.eventId);
-                    return (
-                      <div key={reg.id} className="bg-white/5 rounded-xl border border-white/10 p-4">
-                        <div className="flex justify-between items-start mb-3">
-                          <h3 className="font-bold text-white text-sm line-clamp-1">{event?.name || "Unknown Event"}</h3>
+                <div>
+                  <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">Branch</label>
+                  <input {...regForm.register("branch")} className="w-full bg-white/5 border border-white/20 rounded-xl p-3 text-sm text-white" />
+                  {regForm.formState.errors.branch && <p className="text-red-400 text-xs mt-1">{regForm.formState.errors.branch.message}</p>}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">Mobile No.</label>
+                <input {...regForm.register("mobileNo")} type="tel" className="w-full bg-white/5 border border-white/20 rounded-xl p-3 text-sm text-white" />
+                {regForm.formState.errors.mobileNo && <p className="text-red-400 text-xs mt-1">{regForm.formState.errors.mobileNo.message}</p>}
+              </div>
+
+              <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
+                <button type="button" onClick={() => setSelectedEventToRegister(null)} disabled={!!processingId} className="px-5 py-2 text-white/70 hover:text-white transition-colors disabled:opacity-50">Cancel</button>
+                <button type="submit" disabled={!!processingId} className="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-cyan-300 disabled:opacity-50">
+                  {processingId ? "Confirming..." : "Confirm Booking"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MY TICKETS MODAL (GALLERY) */}
+      {isTicketsModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsTicketsModalOpen(false)}></div>
+          <div className="bg-[#0c1421] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 p-6 md:p-10 shadow-2xl">
+            <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
+              <h2 className="text-3xl font-black text-white">My Tickets</h2>
+              <button onClick={() => setIsTicketsModalOpen(false)} className="text-white/50 hover:text-white transition-colors">
+                ✕ Close
+              </button>
+            </div>
+            
+            {loading ? (
+              <div className="text-center py-10 text-white/40 text-sm">Loading tickets...</div>
+            ) : registrations.length === 0 ? (
+              <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/5 border-dashed">
+                <p className="text-white/40 text-lg">You haven't booked any tickets yet.</p>
+                <button onClick={() => setIsTicketsModalOpen(false)} className="mt-4 px-6 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">Browse Events</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {registrations.map(reg => {
+                  const event = events.find(e => e.id === reg.eventId);
+                  return (
+                    <div key={reg.id} className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden relative group">
+                      <div className="bg-gradient-to-br from-cyan-400/20 to-transparent p-4 border-b border-white/10">
+                        <h3 className="font-bold text-white text-lg line-clamp-1">{event?.name || "Event Ticket"}</h3>
+                        <p className="text-xs text-white/60 mt-1">{event?.date} at {event?.time}</p>
+                      </div>
+                      
+                      <div className="p-6 flex flex-col items-center">
+                        <div className="bg-white p-4 rounded-xl mb-4">
+                          <QRCodeSVG value={reg.qrCodeData} size={140} />
                         </div>
-                        <div className="bg-white p-3 rounded-lg flex justify-center mb-4 max-w-[150px] mx-auto">
-                          <QRCodeSVG value={reg.qrCodeData} size={100} />
+                        <p className="text-center text-[0.65rem] text-white/50 font-mono mb-4 bg-black/40 px-3 py-1.5 rounded-full">{reg.qrCodeData}</p>
+                        
+                        <div className="w-full text-xs text-white/60 space-y-1 mb-6 bg-black/20 p-3 rounded-lg">
+                          <p><strong className="text-white/80">Name:</strong> {reg.userName}</p>
+                          <p><strong className="text-white/80">Course:</strong> {reg.course} - {reg.branch}</p>
                         </div>
-                        <p className="text-center text-[0.65rem] text-white/50 font-mono mb-4 break-all px-2">{reg.qrCodeData}</p>
                         
                         <button 
                           onClick={() => handleCancelRegistration(reg.eventId)}
                           disabled={processingId === reg.eventId}
-                          className="w-full text-xs font-bold uppercase tracking-widest text-red-400 bg-red-400/10 hover:bg-red-400/20 border border-red-400/20 py-2 rounded-lg transition-colors disabled:opacity-50"
+                          className="w-full text-xs font-bold uppercase tracking-widest text-red-400 bg-red-400/10 hover:bg-red-400/20 border border-red-400/20 py-2.5 rounded-xl transition-colors disabled:opacity-50"
                         >
                           {processingId === reg.eventId ? "Cancelling..." : "Cancel Ticket"}
                         </button>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
+
     </div>
   );
 }

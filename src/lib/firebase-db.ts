@@ -27,6 +27,9 @@ export interface RegistrationData {
   userId: string;
   userName: string;
   userEmail: string;
+  course: string;
+  branch: string;
+  mobileNo: string;
   qrCodeData: string;
   registeredAt: any;
 }
@@ -102,7 +105,15 @@ export const getAllEvents = async (): Promise<EventData[]> => {
 // REGISTRATIONS
 // ----------------------
 
-export const registerForEvent = async (eventId: string, userId: string, userName: string, userEmail: string): Promise<{success: boolean, message: string}> => {
+export const registerForEvent = async (
+  eventId: string, 
+  userId: string, 
+  userName: string, 
+  userEmail: string,
+  course: string,
+  branch: string,
+  mobileNo: string
+): Promise<{success: boolean, message: string}> => {
   try {
     const eventRef = doc(db, "events", eventId);
     const registrationId = `${eventId}_${userId}`;
@@ -126,6 +137,9 @@ export const registerForEvent = async (eventId: string, userId: string, userName
         userId,
         userName,
         userEmail,
+        course,
+        branch,
+        mobileNo,
         qrCodeData: `EVORA-${registrationId}`,
         registeredAt: serverTimestamp()
       };

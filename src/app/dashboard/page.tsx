@@ -87,27 +87,10 @@ export default function StudentDashboard() {
             </div>
 
             {/* My Registrations Box */}
-            <div id="registrations" className="bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-xl">
-              <h2 className="text-sm font-bold text-white/80 uppercase tracking-widest mb-4 flex items-center">
-                <span className="mr-2">🎫</span> My Tickets
-              </h2>
-              <div className="bg-white/5 rounded-xl border border-white/10 p-4 relative overflow-hidden group">
-                 <div className="flex justify-between items-start mb-2">
-                   <h3 className="text-white font-bold text-sm group-hover:text-cyan-300 transition-colors">Next-Gen AI Hackathon</h3>
-                 </div>
-                 <p className="text-white/60 text-xs mb-4">Aug 25, 2026 • 10:00 AM</p>
-                 
-                 <div className="flex justify-between items-center mt-2 pt-4 border-t border-white/10">
-                   <div className="bg-white p-1 rounded-md">
-                     {/* QR Code Placeholder */}
-                     <svg className="w-8 h-8 text-black" viewBox="0 0 24 24" fill="currentColor">
-                       <path d="M3 3h8v8H3zM5 5v4h4V5zM13 3h8v8h-8zM15 5v4h4V5zM3 13h8v8H3zM5 15v4h4v-4zM13 13h2v2h-2zM15 13h2v2h-2zM17 13h2v2h-2zM19 13h2v2h-2zM13 15h2v2h-2zM17 15h2v2h-2zM13 17h2v2h-2zM15 17h2v2h-2zM17 17h2v2h-2zM19 17h2v2h-2zM13 19h2v2h-2zM19 19h2v2h-2z" />
-                     </svg>
-                   </div>
-                   <button className="text-[0.65rem] font-bold uppercase tracking-widest text-red-400 hover:text-red-300 transition-colors border border-red-400/30 hover:border-red-400 px-3 py-1.5 rounded-lg bg-red-400/10 hover:bg-red-400/20">
-                     Cancel
-                   </button>
-                 </div>
+            <div className="bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-white/10 shadow-xl">
+              <h2 className="text-sm font-bold text-white/80 uppercase tracking-widest mb-4">My Registrations</h2>
+              <div className="text-center py-10 bg-white/5 rounded-xl border border-white/5 border-dashed">
+                <p className="text-white/40 text-sm italic">You haven't registered for any events yet.</p>
               </div>
             </div>
 

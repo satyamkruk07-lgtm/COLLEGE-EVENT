@@ -25,7 +25,7 @@ export const registerUser = async (email: string, password: string, name: string
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     
-    const role = email === ADMIN_EMAIL ? "admin" : "student";
+    const role = email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "student";
     
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
@@ -53,7 +53,7 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
     let role = await getUserRole(user.uid);
     
     // Auto-upgrade to admin if the email matches but role wasn't set correctly
-    if (user.email === ADMIN_EMAIL && role !== "admin") {
+    if (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && role !== "admin") {
       await setDoc(doc(db, "users", user.uid), { role: "admin" }, { merge: true });
       role = "admin";
     }
@@ -85,7 +85,7 @@ export const loginWithGoogle = async (): Promise<AuthResponse> => {
     const userDocRef = doc(db, "users", user.uid);
     const userDocSnap = await getDoc(userDocRef);
     
-    let role = user.email === ADMIN_EMAIL ? "admin" : "student";
+    let role = user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "admin" : "student";
     
     if (!userDocSnap.exists()) {
       await setDoc(userDocRef, {
@@ -98,7 +98,7 @@ export const loginWithGoogle = async (): Promise<AuthResponse> => {
     } else {
       role = userDocSnap.data().role || "student";
       // Auto-upgrade
-      if (user.email === ADMIN_EMAIL && role !== "admin") {
+      if (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() && role !== "admin") {
         await setDoc(userDocRef, { role: "admin" }, { merge: true });
         role = "admin";
       }

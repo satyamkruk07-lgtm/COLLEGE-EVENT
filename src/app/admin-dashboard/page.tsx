@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,7 @@ import {
   uploadEventImage, getEventRegistrations, EventData, RegistrationData,
   createAnnouncement, getAllAnnouncements, AnnouncementData
 } from "@/lib/firebase-db";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const eventSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -53,14 +54,7 @@ export default function AdminDashboard() {
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema) as any,
     defaultValues: {
-      name: "",
-      description: "",
-      date: "",
-      time: "",
-      venue: "",
-      category: "Technology",
-      deadline: "",
-      totalSeats: 100
+      name: "", description: "", date: "", time: "", venue: "", category: "Technology", deadline: "", totalSeats: 100
     }
   });
 
@@ -167,12 +161,35 @@ export default function AdminDashboard() {
     }
   };
 
+  // Analytics Computation
+  const stats = useMemo(() => {
+    let totalTickets = 0;
+    let totalCapacity = 0;
+    events.forEach(e => {
+      totalTickets += (e.totalSeats - e.availableSeats);
+      totalCapacity += e.totalSeats;
+    });
+    return {
+      totalEvents: events.length,
+      totalTickets,
+      totalCapacity
+    };
+  }, [events]);
+
+  const chartData = useMemo(() => {
+    return events.map(e => ({
+      name: e.name.length > 12 ? e.name.substring(0, 12) + "..." : e.name,
+      Filled: e.totalSeats - e.availableSeats,
+      Available: e.availableSeats
+    }));
+  }, [events]);
+
   return (
-    <div className="min-h-screen relative overflow-hidden font-sans pt-20">
+    <div className="min-h-screen relative overflow-hidden font-sans pt-20 pb-20">
       <div className="fixed inset-0 z-[-1] bg-cover bg-center" style={{ backgroundImage: "url('/hero_frames/frame_115.jpg')" }} />
       <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[-1]" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pb-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 border-b border-white/10 pb-6 mb-8 mt-4">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-4">
@@ -190,6 +207,41 @@ export default function AdminDashboard() {
               + Create Event
             </button>
           </div>
+        </div>
+
+        {/* 📊 ANALYTICS DASHBOARD */}
+        <div className="mb-10">
+          <h2 className="text-xl font-bold text-white uppercase tracking-widest mb-4">Analytics Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col justify-center">
+              <span className="text-white/50 text-xs font-bold uppercase tracking-widest">Total Events Hosted</span>
+              <span className="text-5xl font-black text-white mt-2">{stats.totalEvents}</span>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col justify-center">
+              <span className="text-white/50 text-xs font-bold uppercase tracking-widest">Total Tickets Booked</span>
+              <span className="text-5xl font-black text-cyan-400 mt-2">{stats.totalTickets}</span>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col justify-center">
+              <span className="text-white/50 text-xs font-bold uppercase tracking-widest">Total Capacity</span>
+              <span className="text-5xl font-black text-white mt-2">{stats.totalCapacity}</span>
+            </div>
+          </div>
+          
+          {events.length > 0 && (
+            <div className="bg-black/40 backdrop-blur-xl border border-white/10 p-6 rounded-3xl h-80 w-full">
+              <h3 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-6">Event Registration Distribution</h3>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 20 }}>
+                  <XAxis dataKey="name" stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#ffffff50" fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip cursor={{ fill: '#ffffff10' }} contentStyle={{ backgroundColor: '#000', borderColor: '#ffffff20', borderRadius: '8px' }} />
+                  <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                  <Bar dataKey="Filled" stackId="a" fill="#22d3ee" radius={[0, 0, 4, 4]} />
+                  <Bar dataKey="Available" stackId="a" fill="#ffffff20" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
 
         <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden p-1">

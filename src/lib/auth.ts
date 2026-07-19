@@ -6,6 +6,7 @@ import {
   signOut,
   GoogleAuthProvider,
   signInWithPopup,
+  sendPasswordResetEmail,
   User
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -34,6 +35,15 @@ export const registerUser = async (email: string, password: string, name: string
       role: role,
       createdAt: new Date().toISOString()
     });
+    
+    // Trigger welcome email
+    if (typeof window !== 'undefined') {
+      fetch("/api/send-welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name })
+      }).catch(console.error);
+    }
     
     if (typeof window !== 'undefined') {
       document.cookie = `user_role=${role}; path=/; max-age=86400; SameSite=Strict`;
@@ -95,6 +105,15 @@ export const loginWithGoogle = async (): Promise<AuthResponse> => {
         role: role,
         createdAt: new Date().toISOString()
       });
+      
+      // Trigger welcome email
+      if (typeof window !== 'undefined' && user.email) {
+        fetch("/api/send-welcome", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: user.email, name: user.displayName || "Google User" })
+        }).catch(console.error);
+      }
     } else {
       role = userDocSnap.data().role || "student";
       // Auto-upgrade
@@ -124,5 +143,15 @@ export const getUserRole = async (uid: string): Promise<string> => {
     return "student";
   } catch (error) {
     return "student";
+  }
+};
+
+// 5. Reset Password
+export const resetPassword = async (email: string): Promise<AuthResponse> => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
   }
 };

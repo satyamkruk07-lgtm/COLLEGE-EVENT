@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { registerUser, loginUser, loginWithGoogle } from "@/lib/auth";
+import { registerUser, loginUser, loginWithGoogle, resetPassword } from "@/lib/auth";
 
 // Zod Schemas for Validation
 const loginSchema = z.object({
@@ -62,6 +62,22 @@ export default function LoginPage() {
       handleRedirect(res.role);
     } else {
       toast.error(res.error || "Login failed");
+    }
+  };
+
+  const onForgotPassword = async () => {
+    const email = loginForm.getValues("email");
+    if (!email) {
+      toast.error("Please enter your email first to reset password.");
+      return;
+    }
+    setLoading(true);
+    const res = await resetPassword(email);
+    setLoading(false);
+    if (res.success) {
+      toast.success("Password reset email sent! Please check your inbox.");
+    } else {
+      toast.error(res.error || "Failed to send reset email");
     }
   };
 
@@ -134,7 +150,10 @@ export default function LoginPage() {
               {loginForm.formState.errors.email && <p className="text-red-400 text-xs mt-1">{loginForm.formState.errors.email.message}</p>}
             </div>
             <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest mb-1.5">Password</label>
+              <div className="flex justify-between items-center mb-1.5">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-widest">Password</label>
+                <button type="button" onClick={onForgotPassword} className="text-xs text-cyan-400 hover:text-cyan-300 transition">Forgot Password?</button>
+              </div>
               <input {...loginForm.register("password")} type="password" className="w-full border border-white/20 bg-white/5 rounded-xl p-3 text-sm text-white placeholder-white/30 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" placeholder="••••••••" />
               {loginForm.formState.errors.password && <p className="text-red-400 text-xs mt-1">{loginForm.formState.errors.password.message}</p>}
             </div>

@@ -48,9 +48,9 @@ export default function RootLayout({
 
                 {/* Center: Navigation Links */}
                 <div className="hidden lg:flex items-center gap-8 font-medium text-[0.75rem] uppercase tracking-widest text-white/80">
-                  <Link href="/#events" className="hover:text-white transition-colors">Events</Link>
-                  <Link href="/#features" className="hover:text-white transition-colors">Features</Link>
-                  <Link href="/#stats" className="hover:text-white transition-colors">Impact</Link>
+                  <Link href="/events" className="hover:text-white transition-colors">Events</Link>
+                  <Link href="/features" className="hover:text-white transition-colors">Features</Link>
+                  <Link href="/impact" className="hover:text-white transition-colors">Impact</Link>
                 </div>
 
                 {/* Right: Actionables */}

@@ -34,6 +34,9 @@ export const registerUser = async (email: string, password: string, name: string
       createdAt: new Date().toISOString()
     });
     
+    if (typeof window !== 'undefined') {
+      document.cookie = `user_role=${role}; path=/; max-age=86400; SameSite=Strict`;
+    }
     return { success: true, user, role };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -54,6 +57,9 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
       role = "admin";
     }
     
+    if (typeof window !== 'undefined') {
+      document.cookie = `user_role=${role}; path=/; max-age=86400; SameSite=Strict`;
+    }
     return { success: true, user, role };
   } catch (error: any) {
     return { success: false, error: error.message };
@@ -62,6 +68,9 @@ export const loginUser = async (email: string, password: string): Promise<AuthRe
 
 // 3. Logout
 export const logoutUser = async (): Promise<void> => {
+  if (typeof window !== 'undefined') {
+    document.cookie = "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
   await signOut(auth);
 };
 
@@ -94,6 +103,9 @@ export const loginWithGoogle = async (): Promise<AuthResponse> => {
       }
     }
     
+    if (typeof window !== 'undefined') {
+      document.cookie = `user_role=${role}; path=/; max-age=86400; SameSite=Strict`;
+    }
     return { success: true, user, role };
   } catch (error: any) {
     return { success: false, error: error.message };

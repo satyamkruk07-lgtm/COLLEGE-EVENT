@@ -367,22 +367,15 @@ export default function StudentDashboard() {
               </>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-10">
-                <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-center">
+                <div className="bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex justify-center my-calendar-wrapper">
                   <style>{`
-                    .rdp { 
-                      --rdp-cell-size: 40px; 
-                      --rdp-accent-color: #22d3ee; 
-                      --rdp-background-color: rgba(34,211,238,0.2); 
-                      margin: 0; 
-                      color: white;
-                    }
-                    .rdp-button { border-radius: 8px; }
-                    .rdp-button:hover:not([disabled]):not(.rdp-day_selected) { background-color: rgba(255,255,255,0.1); }
-                    .rdp-day_selected { background-color: #22d3ee !important; color: black !important; font-weight: bold; }
-                    .rdp-day_today { color: #22d3ee; font-weight: bold; }
-                    .rdp-head_cell { color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
-                    .rdp-nav_button { color: white; }
-                    .rdp-nav_button:hover { background-color: rgba(255,255,255,0.1); }
+                    .my-calendar-wrapper { color: white !important; }
+                    .my-calendar-wrapper * { color: white; }
+                    .my-calendar-wrapper button { border-radius: 8px; }
+                    .my-calendar-wrapper button:hover:not([disabled]):not([aria-selected="true"]) { background-color: rgba(255,255,255,0.1); }
+                    .my-calendar-wrapper [aria-selected="true"], .my-calendar-wrapper .rdp-selected { background-color: #22d3ee !important; color: black !important; font-weight: bold !important; }
+                    .my-calendar-wrapper [aria-current="date"], .my-calendar-wrapper .rdp-today { color: #22d3ee !important; font-weight: bold; }
+                    .my-calendar-wrapper [role="columnheader"], .my-calendar-wrapper th { color: rgba(255,255,255,0.5) !important; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; }
                   `}</style>
                   <DayPicker
                     mode="single"

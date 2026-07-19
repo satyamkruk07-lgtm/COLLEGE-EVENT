@@ -53,7 +53,14 @@ export default function AdminDashboard() {
   const form = useForm<z.infer<typeof eventSchema>>({
     resolver: zodResolver(eventSchema) as any,
     defaultValues: {
-      name: "", description: "", date: "", time: "", venue: "", category: "Technology", deadline: "", totalSeats: 100
+      name: "",
+      description: "",
+      date: "",
+      time: "",
+      venue: "",
+      category: "Technology",
+      deadline: "",
+      totalSeats: 100
     }
   });
 
